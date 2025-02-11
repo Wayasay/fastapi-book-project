@@ -11,7 +11,7 @@ db = InMemoryDB()
 db.books = {
     1: Book(
         id=1,
-        title="The Hobbit is a test",
+        title="The Hobbit",
         author="J.R.R. Tolkien",
         publication_year=1937,
         genre=Genre.SCI_FI,
@@ -48,14 +48,16 @@ async def get_books() -> OrderedDict[int, Book]:
     return db.get_books()
 
 @router.get(
-    "/{book_id}", status_code=status.HTTP_200_OK
+    "/{book_id}",response_model=Book, status_code=status.HTTP_200_OK
 )
 async def get_book(book_id: int) ->  Book:
-    # selected_book = db.get_book(book_id)
-    selected_book = False
+    selected_book = db.get_book(book_id)
     if not selected_book:
-        return JSONResponse(status_code=404, content= None, detail="Book not found")
-    return selected_book
+        return JSONResponse(status_code=404, content= None,)
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=selected_book.model_dump(),
+    )
 
 @router.put("/{book_id}", response_model=Book, status_code=status.HTTP_200_OK)
 async def update_book(book_id: int, book: Book) -> Book:

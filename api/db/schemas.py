@@ -61,8 +61,7 @@ class InMemoryDB:
         Returns:
             Book: Book.
         """
-        return {}
-        # return self.books.get(book_id)
+        return self.books.get(book_id)
         
 
     def update_book(self, book_id: int, data: Book) -> Book:
